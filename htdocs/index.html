@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GLSL PARTICLE FONT</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="keywords" content="WebGL,GLSL,Particle,Javascript">
+  <meta name="description" content="one million particle font">
+  <meta property="og:description" content="one million particle font" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://ikeryou.jp/works/g/" />
+  <meta property="og:image" content="http://ikeryou.jp/works/g/assets/img/ogp/ogp.png" />
+  <meta property="og:site_name" content="GLSL PARTICLE FONT" />
+  <meta property="og:title" content="GLSL PARTICLE FONT" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GLSL PARTICLE FONT">
+  <meta name="twitter:description" content="one million particle font">
+  <meta name="twitter:image" content="http://ikeryou.jp/works/g/assets/img/ogp/ogp.png">
+  <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="./assets/css/html5reset-1.6.1.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+  
+  <script id="vs" type="x-shader/x-vertex">
+    
+    attribute vec3 position;
+    attribute float color;
+    attribute float vertexId;
+    attribute float vertexNoiseId;
+    attribute float dist;
+    
+    uniform mat4 mvpMatrix;
+    uniform float time;
+    uniform float div1;
+    uniform float div2;
+    uniform float radX;
+    uniform float radY;
+    uniform float radZ;
+    uniform float fl;
+    uniform float minSize;
+    uniform float maxSize;
+    uniform float pSize;
+    uniform float speed;
+    uniform float sv;
+    uniform bool useNoise;
+    
+    varying vec3 vColor;
+    
+    vec3 rateVal(vec3 from, vec3 to, float rate) {
+      return from.xyz + (to.xyz - from.xyz) * rate;
+    }
+    
+    void main() {
+      
+      float cnt;
+      if(useNoise) {
+        cnt = vertexNoiseId;
+      } else {
+        cnt = vertexId;
+      }
+      
+      vec3 pos = position;
+      
+      float radiusX = sin(cnt * div1 + time * 0.1) * radX;
+      float radiusY = sin(cnt * div1 + time * 0.08) * radY;
+      float radiusZ = sin(cnt * div1 + time * 0.007) * radZ;
+      
+      float rad = cnt * div2 + time * speed;
+      pos.x = position.x + sin(rad) * radiusX;
+      pos.y = position.y + cos(rad) * radiusY;
+      pos.z = position.z + cos(rad) * radiusZ;
+      
+      gl_Position = mvpMatrix * vec4(pos, 1.0);
+      gl_PointSize = max(minSize, maxSize * (fl / (fl / pos.z * pSize)));
+      
+      vec3 destColor = vec3(color + dist * 0.01 + time * 0.001, vec2(sv));
+      vColor = destColor;
+      
+    }
+    
+  </script>
+  <script id="fs" type="x-shader/x-fragment">
+    
+    precision highp float;
+    
+    uniform vec3 offsetColor;
+    
+    varying vec3 vColor;
+    
+    vec3 hsv2rgb(vec3 c) {
+      vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+      vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+      return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+    }
+    
+    void main() {
+      
+      vec4 dest = vec4(hsv2rgb(vColor), 1.0);
+      dest *= vec4(offsetColor, 1.0);
+      gl_FragColor = dest;
+      
+    }
+    
+  </script>
+</head>
+<body>
+  <canvas id="xCanvas"></canvas>
+  <canvas id="xMakedImg" class="noClick"></canvas>
+  <div id="xMakedImgEffect" class="noClick"></div>
+  
+  <div id="xAbout" class="about hide">
+    <h1 id="xTitle" class="title">GLSL PARTICLE FONT</h1>
+    <p id="xCaptionPc" class="caption">1 - PRESS ALPHABET OR NUMBER KEY<br>2 - CLICK WINDOW<br>3 - CLICK SAVE OR RESET BUTTON</p>
+    <p id="xCaptionSmt" class="caption">PC RECOMMENDED</p>
+    <a id="xSave" class="btn" href="javascript:void(0)">SAVE</a>
+    <a id="xReset" class="btn" href="javascript:void(0)">RESET</a>
+  </div>
+
+  <script src="./assets/js/libs/jquery-1.11.3.min.js"></script>
+  <script src="./assets/js/libs/Stats.js"></script>
+  <script src="./assets/js/libs/dat.gui.min.js"></script>
+  <script src="./assets/js/libs/minMatrixb.js"></script>
+  <script src="./assets/js/libs/three.js"></script>
+  <script src="./assets/js/libs/helvetiker_bold.typeface.js"></script>
+  <script src="./assets/js/libs/ImprovedNoise.js"></script>
+  <script src="./assets/js/main.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
