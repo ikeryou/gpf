@@ -1,8 +1,11 @@
-# gpf
-####[GLSL PARTICLE FONT](http://ikeryou.jp/works/g/ "GLSL PARTICLE FONT")####
+# GLSL PARTICLE FONT
+####http://ikeryou.jp/works/g/####
 <img src="http://ikeryou.jp/works/g/assets/img/ogp/ogp.png">
 
-##100万個以上のパーティクルをアニメーションさせたい
+
+#主に非プログラマー向け資料#
+
+##やりたいこと→100万個以上のパーティクルをアニメーションさせたい
 だけど、、  
 Javascriptで100万個のパーティクルに別々の動きをつけるのは負荷的に無理
 
